@@ -1,5 +1,5 @@
 {
-	"name": "proxmox-lxc-ui",
+	"name": "plm",
 	"version": "1.0.0",
 	"description": "Minimal production-quality Proxmox LXC container management UI",
 	"main": "src/server.js",
@@ -14,7 +14,8 @@
 		"proxmox",
 		"lxc",
 		"infrastructure",
-		"htmx"
+		"htmx",
+		"pug"
 	],
 	"author": "lcaohoanq",
 	"license": "MIT",
