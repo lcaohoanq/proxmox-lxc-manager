@@ -1,0 +1,54 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    link(rel="icon" href="/public/img/proxmox.svg" sizes="32x32")
+    link(rel="icon" href="/public/img/proxmox.svg" sizes="192x192")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    title #{title} - Proxmox LXC Manager
+    script(src="https://unpkg.com/htmx.org@2.0.7")
+    link(rel="stylesheet" href="/public/css/index.css")
+    link(rel="stylesheet" href="/public/css/layout.css")
+  body
+    header
+      .header-content
+        div
+          h1 Proxmox LXC Manager
+          .subtitle Infrastructure Control Panel
+          if proxmoxHost
+            .info-item
+              span.info-label Host:
+              span.info-value= proxmoxHost
+          if proxmoxNode
+            .info-item
+              span.info-label Node:
+              span.info-value= proxmoxNode          
+        .search-container
+        input#search-input.search-input(type="text" placeholder="Search by VMID, name, or IP...")
+    
+    main
+      block content
+    
+    script.
+      // Client-side search filter
+      const searchInput = document.getElementById('search-input');
+      if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+          const query = e.target.value.toLowerCase().trim();
+          const rows = document.querySelectorAll('#container-list tr');
+          
+          rows.forEach(row => {
+            // Get text content from VMID, Name, and IP columns
+            const cells = row.querySelectorAll('td');
+            if (cells.length === 0) return;
+            
+            const vmid = cells[0]?.textContent.toLowerCase() || '';
+            const name = cells[1]?.textContent.toLowerCase() || '';
+            const ip = cells[3]?.textContent.toLowerCase() || '';
+            
+            // Show row if query matches any field
+            const matches = vmid.includes(query) || name.includes(query) || ip.includes(query);
+            row.style.display = matches ? '' : 'none';
+          });
+        });
+      }

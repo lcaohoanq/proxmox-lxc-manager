@@ -1,0 +1,43 @@
+- var statusClass = container.status === 'running' ? 'status-running' : 'status-stopped'
+- var memoryPercent = container.maxMemory > 0 ? (container.memory / container.maxMemory * 100).toFixed(1) : 0
+- var cpuPercent = (container.cpu * 100).toFixed(1)
+
+tr(id=`row-${container.vmid}`)
+  td
+    strong= container.vmid
+  td= container.name
+  td
+    span(class=`status ${statusClass}`)= container.status
+  td
+    if container.ipAddress
+      span.ip= container.ipAddress
+    else
+      span.ip-none -
+  td
+    .metric #{formatBytes(container.memory)} / #{formatBytes(container.maxMemory)}
+    .memory-bar
+      .memory-fill(style=`width: ${memoryPercent}%`)
+  td
+    span.metric #{cpuPercent}% (#{container.cpus} cores)
+  td.actions
+    if container.status === 'running'
+      button(
+        hx-post=`/containers/${container.vmid}/stop`
+        hx-target=`#row-${container.vmid}`
+        hx-swap="outerHTML"
+        hx-disabled-elt="this"
+      ) Stop
+    else
+      button.primary(
+        hx-post=`/containers/${container.vmid}/start`
+        hx-target=`#row-${container.vmid}`
+        hx-swap="outerHTML"
+        hx-disabled-elt="this"
+      ) Start
+    button.danger(
+      hx-delete=`/containers/${container.vmid}`
+      hx-confirm=`Are you sure you want to DELETE container ${container.name} (${container.vmid})? This cannot be undone.`
+      hx-target=`#row-${container.vmid}`
+      hx-swap="outerHTML"
+      hx-disabled-elt="this"
+    ) Delete

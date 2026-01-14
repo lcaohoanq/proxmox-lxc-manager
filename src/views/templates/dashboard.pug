@@ -1,0 +1,19 @@
+extends layout.pug
+
+block content
+  if containers && containers.length > 0
+    table
+      thead
+        tr
+          th VMID
+          th Name
+          th Status
+          th IP Address
+          th Memory
+          th CPU
+          th Actions
+      tbody#container-list
+        each container in containers
+          include container-row.pug
+  else
+    include empty-state.pug
