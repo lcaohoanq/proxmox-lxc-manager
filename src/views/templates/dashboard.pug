@@ -11,8 +11,13 @@ block content
           th IP Address
           th Memory
           th CPU
+          th Uptime
           th Actions
-      tbody#container-list
+      tbody#container-list(
+        hx-get="/containers"
+        hx-trigger="every 15s"
+        hx-swap="innerHTML"
+      )
         each container in containers
           include container-row.pug
   else

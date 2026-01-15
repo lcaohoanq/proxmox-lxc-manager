@@ -1,6 +1,7 @@
 - var statusClass = container.status === 'running' ? 'status-running' : 'status-stopped'
 - var memoryPercent = container.maxMemory > 0 ? (container.memory / container.maxMemory * 100).toFixed(1) : 0
 - var cpuPercent = (container.cpu * 100).toFixed(1)
+- var uptime = new Date(container.uptime * 1000).toISOString().slice(11, 19);
 
 tr(id=`row-${container.vmid}`)
   td
@@ -19,6 +20,7 @@ tr(id=`row-${container.vmid}`)
       .memory-fill(style=`width: ${memoryPercent}%`)
   td
     span.metric #{cpuPercent}% (#{container.cpus} cores)
+  td=uptime
   td.actions
     if container.status === 'running'
       button(

@@ -31,6 +31,24 @@ router.get("/health", (req, res) => {
 });
 
 /**
+ * GET /containers
+ * Return only container rows for htmx polling
+ */
+router.get("/containers", async (req, res) => {
+	try {
+		const containers = await proxmoxService.getContainers();
+		// Return all container rows
+		const rows = containers
+			.map((container) => containerRow(container))
+			.join("");
+		res.send(rows);
+	} catch (error) {
+		console.error("Containers polling error:", error.message);
+		res.status(500).send("");
+	}
+});
+
+/**
  * POST /containers/:vmid/start
  * Start a container and return updated row
  */
