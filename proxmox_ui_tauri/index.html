@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="/src/styles.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Proxmox LXC Manager</title>
+    <script type="module" src="/src/main.ts" defer></script>
+  </head>
+
+  <body>
+    <header>
+      <div class="header-content">
+        <div>
+          <h1>Proxmox LXC Manager</h1>
+          <div class="subtitle">Infrastructure Control Panel</div>
+          <div id="config-info" class="config-info"></div>
+        </div>
+        <div class="search-container">
+          <input id="search-input" class="search-input" type="text" placeholder="Search by VMID, name, or IP..." />
+        </div>
+      </div>
+      <a id="proxmox-link" href="#" class="button-link" target="_blank" rel="noopener noreferrer" style="display: none;">Go to Proxmox UI</a>
+    </header>
+
+    <main>
+      <div id="loading" class="loading">
+        <div class="spinner"></div>
+        <p>Loading containers...</p>
+      </div>
+
+      <div id="error" class="error-message" style="display: none;">
+        <h2>❌ Error</h2>
+        <p id="error-text"></p>
+      </div>
+
+      <div id="container-list" class="container-list"></div>
+    </main>
+  </body>
+</html>
