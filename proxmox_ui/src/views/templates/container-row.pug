@@ -8,7 +8,7 @@ tr(id=`row-${container.vmid}`)
     strong= container.vmid
   td= container.name
   td
-    span(class=`status ${statusClass}`)= container.status
+    span(class=`status ${statusClass}`)= container.status === 'running' ? 'UP' : 'DOWN'
   td
     if container.ipAddress
       span.ip= container.ipAddress
@@ -19,12 +19,13 @@ tr(id=`row-${container.vmid}`)
     .memory-bar
       .memory-fill(style=`width: ${memoryPercent}%`)
   td
-    span.metric #{cpuPercent}% (#{container.cpus} cores)
+    span.metric #{cpuPercent}% (#{container.cpus}C)
   td
     span.metric #{formatBytes(container.maxDisk)}
   td
     span.metric #{formatBytes(container.maxSwap)}
-  td=uptime
+  td
+    span.metric #{uptime}
   td.actions
     if container.status === 'running'
       button(

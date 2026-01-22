@@ -1,26 +1,33 @@
 extends layout.pug
 
 block content
-  if containers && containers.length > 0
-    table
-      thead
-        tr
-          th VMID
-          th Name
-          th Status
-          th IP Address
-          th Memory
-          th CPU
-          th Disk
-          th Swap
-          th Uptime
-          th Actions
-      tbody#container-list(
-        hx-get="/containers"
-        hx-trigger="every 15s"
-        hx-swap="innerHTML"
-      )
-        each container in containers
-          include container-row.pug
-  else
-    include empty-state.pug
+  .tabs
+    button.tab.active#tab-containers(
+      hx-get="/containers-table"
+      hx-target="#tab-content"
+      hx-swap="innerHTML"
+      hx-trigger="click"
+    ) LXC
+    button.tab#tab-host(
+      hx-get="/host"
+      hx-target="#tab-content"
+      hx-swap="innerHTML"
+      hx-trigger="click"
+    ) Host Info
+
+  #tab-content
+    include containers-table.pug
+
+  script.
+    // Handle tab active state on HTMX request
+    document.body.addEventListener('htmx:beforeRequest', function(evt) {
+      const trigger = evt.detail.elt;
+      if (trigger.classList.contains('tab')) {
+        // Remove active class from all tabs
+        document.querySelectorAll('.tab').forEach(tab => {
+          tab.classList.remove('active');
+        });
+        // Add active class to clicked tab
+        trigger.classList.add('active');
+      }
+    });

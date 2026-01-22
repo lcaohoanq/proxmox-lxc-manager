@@ -1,0 +1,70 @@
+.host-info-grid
+  .info-card
+    .card-header
+      .card-title CPU Usage
+    .card-body
+      .metric-value= hostInfo.cpu.usage + '%'
+      .metric-detail of #{hostInfo.cpu.cores} CPU(s)
+      .cpu-model= hostInfo.cpu.model
+      .cpu-sockets #{hostInfo.cpu.sockets} Socket(s)
+
+  .info-card
+    .card-header
+      .card-title RAM Usage
+    .card-body
+      .metric-value= hostInfo.memory.percentage + '%'
+      .metric-detail #{hostInfo.memory.usedGB} GiB of #{hostInfo.memory.totalGB} GiB
+      .progress-bar
+        .progress-fill(style=`width: ${hostInfo.memory.percentage}%`)
+
+  .info-card
+    .card-header
+      .card-title IO Delay
+    .card-body
+      .metric-value= hostInfo.ioDelay + '%'
+
+  .info-card
+    .card-header
+      .card-title Load Average
+    .card-body
+      .metric-value= Number(hostInfo.load[0]).toFixed(2)
+      .metric-detail #{Number(hostInfo.load[1]).toFixed(2)}, #{Number(hostInfo.load[2]).toFixed(2)}
+
+
+  .info-card
+    .card-header
+      .card-title KSM Sharing
+    .card-body
+      .metric-value= (hostInfo.ksmSharing / (1024 ** 3)).toFixed(2) + ' GiB'
+
+  .info-card
+    .card-header
+      .card-title HD Space (/)
+    .card-body
+      .metric-value= hostInfo.disk.percentage + '%'
+      .metric-detail #{hostInfo.disk.usedGB} GiB of #{hostInfo.disk.totalGB} GiB
+      .progress-bar
+        .progress-fill(style=`width: ${hostInfo.disk.percentage}%`)
+
+  .info-card
+    .card-header
+      .card-title SWAP Usage
+    .card-body
+      .metric-value= hostInfo.swap.percentage + '%'
+      .metric-detail #{hostInfo.swap.usedGB} GiB of #{hostInfo.swap.totalGB} GiB
+      .progress-bar
+        .progress-fill(style=`width: ${hostInfo.swap.percentage}%`)
+
+  .info-card
+    .card-header
+      .card-title System Info
+    .card-body.system-info
+      .info-row
+        .info-label Kernel Version
+        .info-value= hostInfo.kernel
+      .info-row
+        .info-label Boot Mode
+        .info-value= hostInfo.bootMode
+      .info-row
+        .info-label PVE Version
+        .info-value= hostInfo.pveVersion

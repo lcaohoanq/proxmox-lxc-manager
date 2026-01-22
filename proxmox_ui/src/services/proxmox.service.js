@@ -188,6 +188,75 @@ class ProxmoxService {
 	}
 
 	/**
+	 * Get host node status information
+	 * Returns CPU, memory, disk, swap, kernel info, etc.
+	 */
+	async getHostStatus() {
+		await this.ensureConnected();
+
+		try {
+			const node = config.proxmox.node;
+			const status = await this.client.nodes.$(node).status.$get();
+			const version = await this.client.nodes.$(node).version.$get();
+
+			return {
+				cpu: {
+					usage: ((status.cpu || 0) * 100).toFixed(2),
+					cores: status.cpuinfo?.cpus || 0,
+					model: status.cpuinfo?.model || "N/A",
+					sockets: status.cpuinfo?.sockets || 0,
+				},
+				memory: {
+					used: status.memory?.used || 0,
+					total: status.memory?.total || 0,
+					usedGB: ((status.memory?.used || 0) / 1024 ** 3).toFixed(2),
+					totalGB: ((status.memory?.total || 0) / 1024 ** 3).toFixed(2),
+					percentage: (
+						((status.memory?.used || 0) / (status.memory?.total || 1)) *
+						100
+					).toFixed(2),
+				},
+				swap: {
+					used: status.swap?.used || 0,
+					total: status.swap?.total || 0,
+					usedGB: ((status.swap?.used || 0) / 1024 ** 3).toFixed(2),
+					totalGB: ((status.swap?.total || 0) / 1024 ** 3).toFixed(2),
+					percentage:
+						status.swap?.total > 0
+							? (((status.swap?.used || 0) / status.swap.total) * 100).toFixed(
+									2,
+								)
+							: "0.00",
+				},
+				disk: {
+					used: status.rootfs?.used || 0,
+					total: status.rootfs?.total || 0,
+					usedGB: ((status.rootfs?.used || 0) / 1024 ** 3).toFixed(2),
+					totalGB: ((status.rootfs?.total || 0) / 1024 ** 3).toFixed(2),
+					percentage: (
+						((status.rootfs?.used || 0) / (status.rootfs?.total || 1)) *
+						100
+					).toFixed(2),
+				},
+				load: [
+					Number.parseFloat(status.loadavg?.[0] || 0),
+					Number.parseFloat(status.loadavg?.[1] || 0),
+					Number.parseFloat(status.loadavg?.[2] || 0),
+				],
+				ioDelay: ((status.wait || 0) * 100).toFixed(2),
+				uptime: status.uptime || 0,
+				ksmSharing: status.ksm?.shared || 0,
+				kernel: status.kversion || "N/A",
+				bootMode: status.boot_info?.mode || "N/A",
+				pveVersion: version.version || "N/A",
+			};
+		} catch (error) {
+			console.error("Failed to fetch host status:", error.message);
+			throw new Error("Failed to fetch host status from Proxmox");
+		}
+	}
+
+	/**
 	 * Ensure we're connected before making API calls
 	 */
 	async ensureConnected() {

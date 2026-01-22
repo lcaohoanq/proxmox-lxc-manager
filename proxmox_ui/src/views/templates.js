@@ -33,6 +33,34 @@ export function dashboardPage(containers) {
 }
 
 /**
+ * Host information view (for htmx tab switching)
+ */
+export function hostInfoView(hostInfo) {
+	const template = pug.compileFile(join(templatesDir, "host-info.pug"));
+	return template({
+		hostInfo,
+	});
+}
+
+/**
+ * Containers table view (for htmx tab switching)
+ */
+export function containersTableView(containers) {
+	const templatePath = join(templatesDir, "containers-table.pug");
+	try {
+		const template = pug.compileFile(templatePath);
+		const result = template({
+			containers,
+			formatBytes,
+		});
+		return result;
+	} catch (error) {
+		console.error("[ERROR] Stack:", error.stack);
+		throw error;
+	}
+}
+
+/**
  * Single container row (used for htmx swaps)
  */
 export function containerRow(container) {

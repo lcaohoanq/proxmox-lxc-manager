@@ -1,6 +1,11 @@
 import express from "express";
 import { proxmoxService } from "../services/proxmox.service.js";
-import { containerRow, dashboardPage } from "../views/templates.js";
+import {
+	containerRow,
+	dashboardPage,
+	hostInfoView,
+	containersTableView,
+} from "../views/templates.js";
 
 export const router = express.Router();
 
@@ -28,6 +33,49 @@ router.get("/", async (req, res) => {
 
 router.get("/health", (req, res) => {
 	res.status(200).send("OK");
+});
+
+/**
+ * GET /host
+ * Return host information for htmx tab switching
+ */
+router.get("/host", async (req, res) => {
+	try {
+		const hostInfo = await proxmoxService.getHostStatus();
+		res.send(hostInfoView(hostInfo));
+	} catch (error) {
+		console.error("Host info error:", error.message);
+		res
+			.status(500)
+			.send(`<div class="error">Failed to load host information</div>`);
+	}
+});
+
+/**
+ * GET /containers-table
+ * Return full containers table for htmx tab switching
+ */
+router.get("/containers-table", async (req, res) => {
+	try {
+		console.log("[DEBUG] /containers-table - Starting request");
+		const containers = await proxmoxService.getContainers();
+		console.log(
+			"[DEBUG] /containers-table - Got containers:",
+			containers.length,
+			"items",
+		);
+		const html = containersTableView(containers);
+		console.log(
+			"[DEBUG] /containers-table - Generated HTML length:",
+			html.length,
+		);
+		res.send(html);
+		console.log("[DEBUG] /containers-table - Response sent successfully");
+	} catch (error) {
+		console.error("[ERROR] Containers table error:", error.message);
+		console.error("[ERROR] Stack trace:", error.stack);
+		res.status(500).send(`<div class="error">Failed to load containers</div>`);
+	}
 });
 
 /**
