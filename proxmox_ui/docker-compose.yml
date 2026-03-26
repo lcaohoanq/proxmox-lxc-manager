@@ -1,9 +1,10 @@
 services:
-  proxmox-lxc-app:
+  proxmox-manager:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: proxmox-lxc-app
+    container_name: proxmox-manager
+    image: lcaohoanq/proxmox-manager:latest
     restart: unless-stopped
     env_file:
       - .env
