@@ -1,4 +1,4 @@
-# Proxmox LXC Manager
+# Proxmox Manager
 
 A minimal, production-quality web UI for managing Proxmox LXC containers.
 
@@ -14,3 +14,17 @@ Realtime sync with Proxmox server
 ## Prerequisites
 
 - Proxmox VE server with API access (fill in `.env` file)
+
+## How to use
+
+- Export your token and place in `.env` file
+```bash
+cd proxmox_ui
+cp .env.example .env
+```
+
+- After setting up, using `docker compose` command to start
+
+```bash
+docker compose up -d
+```
