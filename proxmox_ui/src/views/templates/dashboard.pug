@@ -8,6 +8,12 @@ block content
       hx-swap="innerHTML"
       hx-trigger="click"
     ) LXC
+    button.tab#tab-vms(
+      hx-get="/vms-table"
+      hx-target="#tab-content"
+      hx-swap="innerHTML"
+      hx-trigger="click"
+    ) VMs
     button.tab#tab-host(
       hx-get="/host"
       hx-target="#tab-content"
@@ -18,16 +24,17 @@ block content
   #tab-content
     include containers-table.pug
 
+  #detail-panel
+
   script.
-    // Handle tab active state on HTMX request
     document.body.addEventListener('htmx:beforeRequest', function(evt) {
-      const trigger = evt.detail.elt;
+      var trigger = evt.detail.elt;
       if (trigger.classList.contains('tab')) {
-        // Remove active class from all tabs
-        document.querySelectorAll('.tab').forEach(tab => {
+        document.querySelectorAll('.tab').forEach(function(tab) {
           tab.classList.remove('active');
         });
-        // Add active class to clicked tab
         trigger.classList.add('active');
+        var dp = document.getElementById('detail-panel');
+        if (dp) dp.innerHTML = '';
       }
     });

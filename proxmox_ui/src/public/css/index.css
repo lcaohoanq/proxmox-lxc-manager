@@ -313,3 +313,222 @@ button.danger.htmx-request {
     color: #e0e0e0;
     font-family: 'Monaco', 'Courier New', monospace;
 }
+
+/* ─── VM Detail Panel ──────────────────────────────────────────── */
+
+#detail-panel:not(:empty) {
+    margin-top: 20px;
+    border-top: 2px solid #333;
+    padding-top: 20px;
+}
+
+.vm-detail-panel {
+    background: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.detail-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px;
+    background: #252525;
+    border-bottom: 1px solid #333;
+}
+
+.detail-header h2 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #fff;
+    margin: 0;
+    flex: 1;
+}
+
+.close-btn {
+    background: transparent;
+    border: 1px solid #444;
+    color: #888;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 4px 10px;
+    border-radius: 3px;
+}
+
+.close-btn:hover {
+    color: #fff;
+    border-color: #666;
+}
+
+.detail-tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid #333;
+    background: #1e1e1e;
+}
+
+.detail-tab {
+    padding: 10px 20px;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: #888;
+    cursor: pointer;
+    font-size: 13px;
+    margin-bottom: -1px;
+}
+
+.detail-tab:hover {
+    color: #e0e0e0;
+}
+
+.detail-tab.active {
+    color: #4ade80;
+    border-bottom-color: #4ade80;
+}
+
+.detail-section {
+    display: none;
+    padding: 20px;
+}
+
+.detail-section.active {
+    display: block;
+}
+
+.detail-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 16px;
+}
+
+.detail-card {
+    background: #222;
+    border: 1px solid #333;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.detail-card .card-body .info-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #2a2a2a;
+}
+
+.detail-card .card-body .info-row:last-child {
+    border-bottom: none;
+}
+
+.detail-card .info-label {
+    font-size: 13px;
+    color: #888;
+    font-weight: 500;
+    min-width: 100px;
+}
+
+.detail-card .info-value {
+    font-size: 13px;
+    color: #e0e0e0;
+    text-align: right;
+    word-break: break-all;
+}
+
+.info-value.mono {
+    font-family: 'Monaco', 'Courier New', monospace;
+    font-size: 12px;
+    color: #ccc;
+    max-width: 300px;
+}
+
+/* VM name link */
+.vm-name-link {
+    color: #60a5fa;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.vm-name-link:hover {
+    color: #93bbfd;
+    text-decoration: underline;
+}
+
+/* Paused status */
+.status-paused {
+    background: #4a3a0f;
+    color: #fbbf24;
+}
+
+/* ─── Snapshots ────────────────────────────────────────────────── */
+
+.snapshots-panel h3 {
+    font-size: 16px;
+    margin-bottom: 16px;
+    color: #fff;
+}
+
+.snapshot-form {
+    margin-bottom: 20px;
+}
+
+.form-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.form-input {
+    padding: 8px 12px;
+    background: #222;
+    border: 1px solid #444;
+    border-radius: 4px;
+    color: #e0e0e0;
+    font-size: 13px;
+    flex: 1;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #4ade80;
+}
+
+.form-input::placeholder {
+    color: #666;
+}
+
+.snapshots-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #222;
+    border: 1px solid #333;
+}
+
+.snapshots-table th,
+.snapshots-table td {
+    padding: 10px 14px;
+    text-align: left;
+    border-bottom: 1px solid #333;
+}
+
+.snapshots-table th {
+    background: #2a2a2a;
+    font-size: 12px;
+}
+
+.loading-text {
+    color: #666;
+    font-style: italic;
+    padding: 20px;
+    text-align: center;
+}
+
+@media (max-width: 768px) {
+    .form-row {
+        flex-direction: column;
+    }
+
+    .detail-grid {
+        grid-template-columns: 1fr;
+    }
+}

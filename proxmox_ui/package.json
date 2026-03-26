@@ -1,7 +1,7 @@
 {
 	"name": "plm",
 	"version": "1.0.0",
-	"description": "Minimal production-quality Proxmox LXC container management UI",
+	"description": "Proxmox LXC & VM management UI with HTMX",
 	"main": "src/server.js",
 	"type": "module",
 	"scripts": {
@@ -13,6 +13,8 @@
 	"keywords": [
 		"proxmox",
 		"lxc",
+		"qemu",
+		"vm",
 		"infrastructure",
 		"htmx",
 		"pug"

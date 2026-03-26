@@ -1,0 +1,47 @@
+.snapshots-panel
+  h3 Snapshots
+  
+  form.snapshot-form(
+    hx-post=`/vms/${vmid}/snapshots`
+    hx-target="#snapshots-container"
+    hx-swap="innerHTML"
+  )
+    .form-row
+      input.form-input(type="text" name="name" placeholder="Snapshot name" required)
+      input.form-input(type="text" name="description" placeholder="Description (optional)")
+      button.primary(type="submit") Create Snapshot
+
+  #snapshots-container
+    if snapshots && snapshots.length > 0
+      table.snapshots-table
+        thead
+          tr
+            th Name
+            th Description
+            th Date
+            th Actions
+        tbody
+          each snap in snapshots
+            tr
+              td
+                strong= snap.name
+              td= snap.description || '-'
+              td= snap.snaptime ? new Date(snap.snaptime * 1000).toLocaleString() : '-'
+              td.actions
+                button(
+                  hx-post=`/vms/${vmid}/snapshots/${snap.name}/rollback`
+                  hx-target="#snapshots-container"
+                  hx-swap="innerHTML"
+                  hx-confirm=`Rollback VM to snapshot '${snap.name}'? Current state will be lost.`
+                  hx-disabled-elt="this"
+                ) Rollback
+                button.danger(
+                  hx-delete=`/vms/${vmid}/snapshots/${snap.name}`
+                  hx-target="#snapshots-container"
+                  hx-swap="innerHTML"
+                  hx-confirm=`Delete snapshot '${snap.name}'?`
+                  hx-disabled-elt="this"
+                ) Delete
+    else
+      .empty-state
+        p No snapshots for this VM.

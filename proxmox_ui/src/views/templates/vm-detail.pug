@@ -1,0 +1,108 @@
+.vm-detail-panel
+  .detail-header
+    h2 #{vm ? vm.name : 'VM ' + vmid}
+    span(class=`status ${vm && vm.status === 'running' ? 'status-running' : 'status-stopped'}`)= vm ? (vm.status === 'running' ? 'UP' : 'DOWN') : 'UNKNOWN'
+    button.close-btn(onclick="document.getElementById('detail-panel').innerHTML = ''") ✕
+
+  .detail-tabs
+    button.detail-tab.active(
+      onclick="switchDetailTab(this, 'config-section')"
+    ) Configuration
+    button.detail-tab(
+      onclick="switchDetailTab(this, 'snapshots-section')"
+      hx-get=`/vms/${vmid}/snapshots`
+      hx-target="#snapshots-section"
+      hx-swap="innerHTML"
+      hx-trigger="click once"
+    ) Snapshots
+
+  #config-section.detail-section.active
+    .detail-grid
+      .detail-card
+        .card-header
+          .card-title Hardware
+        .card-body
+          .info-row
+            .info-label CPU
+            .info-value= config.cores ? config.cores + ' cores' : 'N/A'
+          .info-row
+            .info-label Memory
+            .info-value= config.memory ? config.memory + ' MiB' : 'N/A'
+          .info-row
+            .info-label BIOS
+            .info-value= config.bios || 'SeaBIOS'
+          .info-row
+            .info-label Machine
+            .info-value= config.machine || 'default'
+          if config.balloon !== undefined
+            .info-row
+              .info-label Ballooning
+              .info-value= config.balloon > 0 ? config.balloon + ' MiB' : 'Disabled'
+
+      .detail-card
+        .card-header
+          .card-title OS & Boot
+        .card-body
+          .info-row
+            .info-label OS Type
+            .info-value= config.ostype || 'N/A'
+          .info-row
+            .info-label Boot Order
+            .info-value= config.boot || 'N/A'
+          if config.agent
+            .info-row
+              .info-label QEMU Agent
+              .info-value= config.agent
+
+      .detail-card
+        .card-header
+          .card-title Storage
+        .card-body
+          if config.scsi0
+            .info-row
+              .info-label scsi0
+              .info-value.mono= config.scsi0
+          if config.ide0
+            .info-row
+              .info-label ide0
+              .info-value.mono= config.ide0
+          if config.ide2
+            .info-row
+              .info-label ide2
+              .info-value.mono= config.ide2
+          if config.virtio0
+            .info-row
+              .info-label virtio0
+              .info-value.mono= config.virtio0
+          if config.efidisk0
+            .info-row
+              .info-label EFI Disk
+              .info-value.mono= config.efidisk0
+
+      .detail-card
+        .card-header
+          .card-title Network
+        .card-body
+          if config.net0
+            .info-row
+              .info-label net0
+              .info-value.mono= config.net0
+          if config.net1
+            .info-row
+              .info-label net1
+              .info-value.mono= config.net1
+          if vm && vm.ipAddress
+            .info-row
+              .info-label IP Address
+              .info-value.ip= vm.ipAddress
+
+  #snapshots-section.detail-section
+    .loading-text Loading snapshots...
+
+  script.
+    function switchDetailTab(btn, sectionId) {
+      document.querySelectorAll('.detail-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.detail-section').forEach(s => s.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(sectionId).classList.add('active');
+    }

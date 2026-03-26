@@ -1,0 +1,93 @@
+- var statusClass = vm.status === 'running' ? 'status-running' : (vm.status === 'paused' ? 'status-paused' : 'status-stopped')
+- var statusLabel = vm.status === 'running' ? 'UP' : (vm.status === 'paused' ? 'PAUSED' : 'DOWN')
+- var memoryPercent = vm.maxMemory > 0 ? (vm.memory / vm.maxMemory * 100).toFixed(1) : 0
+- var cpuPercent = (vm.cpu * 100).toFixed(1)
+- var uptime = new Date(vm.uptime * 1000).toISOString().slice(11, 19)
+
+tr(id=`vm-row-${vm.vmid}`)
+  td
+    strong= vm.vmid
+  td
+    a.vm-name-link(
+      href="#"
+      hx-get=`/vms/${vm.vmid}`
+      hx-target="#detail-panel"
+      hx-swap="innerHTML"
+    )= vm.name
+  td
+    span(class=`status ${statusClass}`)= statusLabel
+  td
+    if vm.ipAddress
+      span.ip= vm.ipAddress
+    else
+      span.ip-none -
+  td
+    .metric #{formatBytes(vm.memory)} / #{formatBytes(vm.maxMemory)}
+    .memory-bar
+      .memory-fill(style=`width: ${memoryPercent}%`)
+  td
+    span.metric #{cpuPercent}% (#{vm.cpus}C)
+  td
+    span.metric #{formatBytes(vm.maxDisk)}
+  td
+    span.metric ↓#{formatBytes(vm.netin)} / ↑#{formatBytes(vm.netout)}
+  td
+    span.metric #{uptime}
+  td.actions
+    if vm.status === 'running'
+      button(
+        hx-post=`/vms/${vm.vmid}/shutdown`
+        hx-target=`#vm-row-${vm.vmid}`
+        hx-swap="outerHTML"
+        hx-disabled-elt="this"
+        title="ACPI Shutdown"
+      ) Shutdown
+      button(
+        hx-post=`/vms/${vm.vmid}/reboot`
+        hx-target=`#vm-row-${vm.vmid}`
+        hx-swap="outerHTML"
+        hx-disabled-elt="this"
+        title="Reboot"
+      ) Reboot
+      button(
+        hx-post=`/vms/${vm.vmid}/suspend`
+        hx-target=`#vm-row-${vm.vmid}`
+        hx-swap="outerHTML"
+        hx-disabled-elt="this"
+        title="Pause VM"
+      ) Pause
+      button.danger(
+        hx-post=`/vms/${vm.vmid}/stop`
+        hx-target=`#vm-row-${vm.vmid}`
+        hx-swap="outerHTML"
+        hx-confirm=`Force stop VM ${vm.name} (${vm.vmid})?`
+        hx-disabled-elt="this"
+        title="Force Stop"
+      ) Force Stop
+    else if vm.status === 'paused'
+      button.primary(
+        hx-post=`/vms/${vm.vmid}/resume`
+        hx-target=`#vm-row-${vm.vmid}`
+        hx-swap="outerHTML"
+        hx-disabled-elt="this"
+      ) Resume
+      button.danger(
+        hx-post=`/vms/${vm.vmid}/stop`
+        hx-target=`#vm-row-${vm.vmid}`
+        hx-swap="outerHTML"
+        hx-disabled-elt="this"
+      ) Force Stop
+    else
+      button.primary(
+        hx-post=`/vms/${vm.vmid}/start`
+        hx-target=`#vm-row-${vm.vmid}`
+        hx-swap="outerHTML"
+        hx-disabled-elt="this"
+      ) Start
+    button.danger(
+      hx-delete=`/vms/${vm.vmid}`
+      hx-confirm=`Are you sure you want to DELETE VM ${vm.name} (${vm.vmid})? This cannot be undone.`
+      hx-target=`#vm-row-${vm.vmid}`
+      hx-swap="outerHTML"
+      hx-disabled-elt="this"
+    ) Delete

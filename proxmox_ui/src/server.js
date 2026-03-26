@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 import { config, validateConfig } from "./config.js";
 import { proxmoxService } from "./services/proxmox.service.js";
 import { router as containerRoutes } from "./routes/container.routes.js";
+import { vmRouter } from "./routes/vm.routes.js";
 import { notFoundPage, errorPage } from "./views/templates.js";
 
 // Get directory path for ES modules
@@ -34,6 +35,7 @@ app.use((req, res, next) => {
 
 // Mount routes
 app.use("/", containerRoutes);
+app.use("/", vmRouter);
 
 // 404 handler
 app.use((req, res) => {
@@ -52,7 +54,7 @@ async function start() {
 
 		app.listen(config.server.port, () => {
 			console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-			console.log("Proxmox LXC Manager");
+			console.log("Proxmox Manager (LXC + VM)");
 			console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
 			console.log(`URL: http://localhost:${config.server.port}`);
 			console.log(`Node: ${config.proxmox.node}`);

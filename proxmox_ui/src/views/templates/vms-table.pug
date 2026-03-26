@@ -1,0 +1,24 @@
+if vms && vms.length > 0
+  table
+    thead
+      tr
+        th VMID
+        th Name
+        th Status
+        th IPv4
+        th Memory
+        th CPU
+        th Disk
+        th Network I/O
+        th Uptime
+        th Actions
+    tbody#vm-list(
+      hx-get="/vms"
+      hx-trigger="every 15s"
+      hx-swap="innerHTML"
+    )
+      each vm in vms
+        include vm-row.pug
+else
+  .empty-state
+    p No QEMU virtual machines found on this node.

@@ -80,6 +80,38 @@ export function errorRow(vmid, message) {
 }
 
 /**
+ * VMs table view (for htmx tab switching)
+ */
+export function vmsTableView(vms) {
+	const template = pug.compileFile(join(templatesDir, "vms-table.pug"));
+	return template({ vms, formatBytes });
+}
+
+/**
+ * Single VM row (used for htmx swaps)
+ */
+export function vmRow(vm) {
+	const template = pug.compileFile(join(templatesDir, "vm-row.pug"));
+	return template({ vm, formatBytes });
+}
+
+/**
+ * VM detail panel (config + status)
+ */
+export function vmDetailView(data) {
+	const template = pug.compileFile(join(templatesDir, "vm-detail.pug"));
+	return template(data);
+}
+
+/**
+ * VM snapshots panel
+ */
+export function vmSnapshotsView(vmid, snapshots) {
+	const template = pug.compileFile(join(templatesDir, "vm-snapshots.pug"));
+	return template({ vmid, snapshots });
+}
+
+/**
  * 404 Error page
  */
 export function notFoundPage() {
